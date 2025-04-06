@@ -1,6 +1,7 @@
+import "dotenv/config";
 import express from "express";
 const app = express();
-const port = 3030;
+const port = process.env.PORT||3030;
 let gameData = [];
 let newindex = 1;
 app.use(express.json());
@@ -22,26 +23,25 @@ app.get("/games", (req, res) => {
   res.status(202).send(gameData);
 });
 //update element in array
-app.put('/games/:id', (req, res) => {
-  const Game=gameData.find((t) => t.id === parseInt(req.params.id));
-if(!Game){
-    return res.status(404).send('game not found')
-}
-const{name,price}=req.body
-Game.name=name
-Game.price=price
-return res.status(200).send('This game is updated')
+app.put("/games/:id", (req, res) => {
+  const Game = gameData.find((t) => t.id === parseInt(req.params.id));
+  if (!Game) {
+    return res.status(404).send("game not found");
+  }
+  const { name, price } = req.body;
+  Game.name = name;
+  Game.price = price;
+  return res.status(200).send("This game is updated");
 });
 //delete element from array
-app.delete('/delete/:id',(req,res)=>{
-    const index=gameData.findIndex(t=>t.id===parseInt(req.params.id));
- if(index===-1){
-    return res.status(404).send('game not found');
- }
- gameData.splice(index,1);
- return res.status(202).send('deleted')
-
-})
+app.delete("/delete/:id", (req, res) => {
+  const index = gameData.findIndex((t) => t.id === parseInt(req.params.id));
+  if (index === -1) {
+    return res.status(404).send("game not found");
+  }
+  gameData.splice(index, 1);
+  return res.status(202).send("deleted");
+});
 app.listen(port, () => {
   console.log(`Server is listening at ${port}..`);
 });
